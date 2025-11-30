@@ -22,3 +22,19 @@ body{
     border: 1px solid white;
     padding: 5px;
 }
+#submitBtn {
+    margin-top: 20px;
+    width: 300px;
+    height: 50px;
+    background-color: #222;      /* Qara fon */
+    color: white;                /* Ağ yazı */
+    border: 2px solid white;     /* Ağ kənar */
+    font-size: 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#submitBtn:hover {
+    background-color: #444;      /* Hover zamanı bir az açıq qara */
+}
